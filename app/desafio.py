@@ -200,6 +200,18 @@ class Deposito(Transacao):
             conta.historico.adicionar_transacao(self)
 
 
+def log_transacao(func):
+    def wrapper(*args, **kwargs):
+        resultado = func(*args, **kwargs)
+
+        tipo = func.__name__.replace("_", " ").capitalize()
+        data_hora = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        print(f"\nLOG {tipo} realizado em {data_hora}")
+
+        return resultado
+    return wrapper
+
+
 def menu():
     menu = f"""\n
     {" MENU ".center(40, '=')}
@@ -215,6 +227,7 @@ def menu():
     return input(textwrap.dedent(menu))
 
 
+@log_transacao
 def depositar(clientes):
     cliente, conta = obter_cliente_e_conta(clientes)
 
@@ -231,6 +244,7 @@ def depositar(clientes):
     cliente.realizar_transacao(conta, transacao)
 
 
+@log_transacao
 def sacar(clientes): 
     cliente, conta = obter_cliente_e_conta(clientes)
 
@@ -247,6 +261,7 @@ def sacar(clientes):
     cliente.realizar_transacao(conta, transacao)
 
 
+@log_transacao
 def exibir_extrato(clientes):
     cliente, conta = obter_cliente_e_conta(clientes)
 
@@ -272,6 +287,7 @@ def exibir_extrato(clientes):
     print('=' * 40)
 
 
+@log_transacao
 def criar_conta(numero_conta, clientes, contas):
     cliente = obter_cliente(clientes)
     
@@ -296,7 +312,7 @@ def listar_contas(contas):
         print(textwrap.dedent(str(conta)))
         print('-' * 40)
 
-
+@log_transacao
 def criar_cliente(clientes):
     cpf = input("Informe o CPF (somente número): ")
     cliente = filtrar_cliente(cpf, clientes)
