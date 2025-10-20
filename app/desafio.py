@@ -3,6 +3,23 @@ from abc import ABC, abstractmethod
 import textwrap, platform, os
 
 
+class ContaIterador:
+    def __init__(self, contas):
+        self._contas = contas
+        self._contador = 0
+    
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        try:
+            conta = self._contas[self._contador]
+            self._contador += 1
+            return conta
+        except IndexError:
+            raise StopIteration
+
+
 class Cliente:
     def __init__(self, endereco):
         self.endereco = endereco
@@ -308,7 +325,7 @@ def listar_contas(contas):
     
     print()
     print(" LISTA DE CONTAS ".center(40, '='))
-    for conta in contas:
+    for conta in ContaIterador(contas):
         print(textwrap.dedent(str(conta)))
         print('-' * 40)
 
