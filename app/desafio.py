@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from abc import ABC, abstractmethod
 import textwrap, platform, os
 
@@ -137,7 +137,7 @@ class Historico:
             {
                 "tipo": transacao.__class__.__name__,
                 "valor": transacao.valor,
-                "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+                "data": datetime.now(timezone.utc).strftime("%d-%m-%Y %H:%M:%S"),
             }
         )
     
