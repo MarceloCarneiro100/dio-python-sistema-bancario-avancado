@@ -140,6 +140,12 @@ class Historico:
                 "data": datetime.now(timezone.utc).strftime("%d-%m-%Y %H:%M:%S"),
             }
     )
+        
+    def gerar_relatorio(self, tipo_transacao=None):
+        for transacao in self._transacoes:
+            if tipo_transacao is None or transacao["tipo"].lower() == tipo_transacao.lower():
+                yield transacao
+
     
     def transacoes_do_dia(self):
         data_atual = datetime.now(timezone.utc).date()
@@ -249,18 +255,17 @@ def exibir_extrato(clientes):
     
     print()
     print(" EXTRATO ".center(40, '='))
-    transacoes = conta.historico.transacoes
     extrato = ""
 
-    if not transacoes:
-        extrato = "\nNão foram realizadas movimentações."
-    else:
-        linhas = [
-            f"\n({t['data']})\n{t['tipo']}: \n\tR$ {t['valor']:.2f}\n"
-            for t in transacoes
-        ]
+    transacoes = [
+        f"\n({t['data']})\n{t['tipo']}: \n\tR$ {t['valor']:.2f}\n"
+        for t in conta.historico.gerar_relatorio()
+    ]
     
-        extrato = "".join(linhas)
+    if not transacoes:
+        extrato = "Não foram realizadas movimentações"
+    else:
+        extrato = "".join(transacoes)
         
     print(extrato)
     print(f"\nSaldo:\n\tR$ {conta.saldo:.2f}")
