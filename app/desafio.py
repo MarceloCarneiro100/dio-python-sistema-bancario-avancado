@@ -26,8 +26,13 @@ class Cliente:
         self.contas = []
 
     def realizar_transacao(self, conta, transacao):
+        if len(conta.historico.transacoes_do_dia()) >= 10:
+            print("\n<<< Você excedeu o número de transações permitidas para hoje! >>>")
+            return
+        
         transacao.registrar(conta)
     
+
     def adicionar_conta(self, conta):
         self.contas.append(conta)
 
